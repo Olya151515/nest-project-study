@@ -1,9 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { SwaggerHelper } from './common/helpers/swagger-helper';
+import { AppConfig, Config } from './configs/config-type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,11 +32,16 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerHelper.setDefaultResponses(document);
   SwaggerModule.setup('docs', app, document);
-  const port = 3000;
-  const host = 'localhost';
-  await app.listen(3000, () => {
-    console.log(`Server is running on http://${host}:${port}`);
-    console.log(`Api swagger is running on http://${host}:${port}/docs`);
+  const configService = app.get(ConfigService);
+  const appConfig = configService.get<AppConfig>('app');
+
+  await app.listen(appConfig.port, () => {
+    console.log(
+      `Server is running on http://${appConfig.host}:${appConfig.port}`,
+    );
+    console.log(
+      `Api swagger is running on http://${appConfig.host}:${appConfig.port}/docs`,
+    );
   });
 }
 void bootstrap();
