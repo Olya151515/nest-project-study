@@ -31,7 +31,18 @@ import { Config, DatabaseConfig } from '../../configs/config-type';
               '*.entity.js',
             ),
           ],
+          migrations: [
+            path.join(
+              process.cwd(),
+              'dist',
+              'src',
+              'database',
+              'migrations',
+              '*.js',
+            ),
+          ],
           synchronize: false,
+          migrationsRun: true, //false
         };
       },
     }),

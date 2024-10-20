@@ -23,5 +23,5 @@ export class UserEntity {
   // @VirtualColumn({
   //   query: () => 'SELECT CONCAT(firstName, lastName) FROM users WHERE id = id',
   // })
-  // fullName: string;
+  // fullName: string; //щоб зєднувати колонки між собою(firstname+lastname)
 }
