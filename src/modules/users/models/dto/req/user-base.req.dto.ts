@@ -17,7 +17,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { TransformerHelper } from '../../../../common/helpers/transformer.helper';
+import { TransformerHelper } from '../../../../../common/helpers/transformer.helper';
 import { GenderEnum } from '../../enums/gender.enum';
 
 export class CarBaseReqDto {

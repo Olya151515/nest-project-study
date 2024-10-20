@@ -1,3 +1,5 @@
 node_modules
 /.idea
-/.env
+nest-project-study-api-db
+nest-project-study-api-s3-data
+.env

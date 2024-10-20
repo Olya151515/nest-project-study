@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CreateCommentDto } from './models/dto/res/create-comment.dto';
+import { UpdateCommentDto } from './models/dto/res/update-comment.dto';
+import { CommentsService } from './services/comments.service';
 
 @ApiTags('comments')
 @Controller('comments')
