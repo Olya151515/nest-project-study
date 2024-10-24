@@ -42,7 +42,7 @@ import { Config, DatabaseConfig } from '../../configs/config-type';
             ),
           ],
           synchronize: false,
-          migrationsRun: true, //false
+          migrationsRun: false,
         };
       },
     }),
