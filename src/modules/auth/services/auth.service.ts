@@ -79,7 +79,8 @@ export class AuthService {
       }),
     );
 
-    return { user: UserMapper.toResDto(user), tokens };
+    const userEntity = await this.userRepository.findOneBy({ id: user.id });
+    return { user: UserMapper.toResDto(userEntity), tokens };
   }
 
   private async isEmailNotExistOrThrow(email: string) {

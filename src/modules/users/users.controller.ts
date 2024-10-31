@@ -1,7 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
+import { JwtAccessGuard } from '../auth/guards/jwt-access-guard';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UsersService } from './services/users.service';
 
@@ -9,6 +18,13 @@ import { UsersService } from './services/users.service';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @UseGuards(JwtAccessGuard)
+  @ApiBearerAuth()
+  @Get('me')
+  public async findMe() {
+    return this.usersService.findMe();
+  }
 
   @Get(':id')
   public async findOne(@Param('id') id: UserID) {

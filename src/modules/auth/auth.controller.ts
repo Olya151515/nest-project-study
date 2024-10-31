@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { SignInReqDto } from './models/dto/req/sign-in.req.dto';
+import { SignInDtoReq, SignInReqDto } from './models/dto/req/sign-in.req.dto';
 import { SignUpDtoReq } from './models/dto/req/sign-up.req.dto';
 import { AuthResDto } from './models/dto/res/auth.res.dto';
 import { AuthService } from './services/auth.service';
@@ -17,7 +17,7 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  public async signIn(@Body() dto: SignInReqDto): Promise<AuthResDto> {
+  public async signIn(@Body() dto: SignInDtoReq): Promise<AuthResDto> {
     return await this.authService.signIn(dto);
   }
 }

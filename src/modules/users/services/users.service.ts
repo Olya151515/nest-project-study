@@ -19,6 +19,9 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
+  findMe() {
+    return `This action returns a #${'i'} user`;
+  }
   update(id: UserID, updateUserDto: UpdateUserReqDto) {
     return `This action updates a #${id} user`;
   }
