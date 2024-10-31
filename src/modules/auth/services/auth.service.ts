@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { RefreshTokenRepository } from '../../repository/services/refresh-token.repository';
 import { UserRepository } from '../../repository/services/user.repository';
 import { UserMapper } from '../../users/services/user.mapper';
-import { SignInReqDto } from '../models/dto/req/sign-in.req.dto';
+import { SignInDtoReq, SignInReqDto } from '../models/dto/req/sign-in.req.dto';
 import { SignUpDtoReq } from '../models/dto/req/sign-up.req.dto';
 import { AuthResDto } from '../models/dto/res/auth.res.dto';
 import { AuthCacheService } from './auth-cache-service';
@@ -47,7 +47,40 @@ export class AuthService {
     return { user: UserMapper.toResDto(user), tokens };
   }
 
-  public async signIn(dto: SignInReqDto): Promise<any> {}
+  public async signIn(dto: SignInDtoReq): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+      select: ['id', 'password'],
+    });
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException();
+    }
+
+    const tokens = await this.tokenService.generateAuthTokens({
+      userId: user.id,
+      deviceId: dto.deviceId,
+    });
+
+    await this.authCacheService.saveToken(
+      tokens.accessToken,
+      user.id,
+      dto.deviceId,
+    );
+    await this.refreshTokenRepository.save(
+      this.refreshTokenRepository.create({
+        user_id: user.id,
+        deviceId: dto.deviceId,
+        refreshToken: tokens.refreshToken,
+      }),
+    );
+
+    return { user: UserMapper.toResDto(user), tokens };
+  }
 
   private async isEmailNotExistOrThrow(email: string) {
     const user = await this.userRepository.findOneBy({ email });

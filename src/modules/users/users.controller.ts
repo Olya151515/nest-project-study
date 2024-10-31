@@ -12,7 +12,7 @@ export class UsersController {
 
   @Get(':id')
   public async findOne(@Param('id') id: UserID) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
@@ -20,11 +20,11 @@ export class UsersController {
     @Param('id') id: UserID,
     @Body() updateUserDto: UpdateUserReqDto,
   ) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   public async remove(@Param('id') id: UserID) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }

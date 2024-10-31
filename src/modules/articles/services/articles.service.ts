@@ -12,7 +12,7 @@ export class ArticlesService {
     private readonly commentService: CommentsService,
   ) {}
   create(createArticleDto: CreateArticleDto) {
-    this.userService.checkAbilityToEditArticle('userId', 'articleI');
+    // this.userService.checkAbilityToEditArticle('userID', 'articleID');
     return 'This action adds a new article';
   }
 
