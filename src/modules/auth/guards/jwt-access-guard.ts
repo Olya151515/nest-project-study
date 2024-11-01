@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 
 import { UserRepository } from '../../repository/services/user.repository';
 import { UserMapper } from '../../users/services/user.mapper';
+import { SKIP_AUTH } from '../decorators/skip-auth-decorator';
 import { TokenType } from '../models/enums/token-type-enum';
 import { AuthCacheService } from '../services/auth-cache-service';
 import { TokenService } from '../services/token.service';
@@ -21,11 +22,11 @@ export class JwtAccessGuard implements CanActivate {
     private readonly userRepository: UserRepository,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // const skipAuth = this.reflector.getAllAndOverride<boolean>(SKIP_AUTH, [
-    //   context.getHandler(),
-    //   context.getClass(),
-    // ]);
-    // if (skipAuth) return true;
+    const skipAuth = this.reflector.getAllAndOverride<boolean>(SKIP_AUTH, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (skipAuth) return true;
 
     const request = context.switchToHttp().getRequest();
     const accessToken = request.get('Authorization')?.split('Bearer ')[1];

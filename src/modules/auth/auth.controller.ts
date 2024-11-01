@@ -1,7 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { SignInDtoReq, SignInReqDto } from './models/dto/req/sign-in.req.dto';
+import { SkipAuth } from './decorators/skip-auth-decorator';
+import { SignInDtoReq } from './models/dto/req/sign-in.req.dto';
 import { SignUpDtoReq } from './models/dto/req/sign-up.req.dto';
 import { AuthResDto } from './models/dto/res/auth.res.dto';
 import { AuthService } from './services/auth.service';
@@ -10,12 +11,12 @@ import { AuthService } from './services/auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  @SkipAuth()
   @Post('sign-up')
   public async signUp(@Body() dto: SignUpDtoReq): Promise<AuthResDto> {
     return await this.authService.signUp(dto);
   }
-
+  @SkipAuth()
   @Post('sign-in')
   public async signIn(@Body() dto: SignInDtoReq): Promise<AuthResDto> {
     return await this.authService.signIn(dto);

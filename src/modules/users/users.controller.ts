@@ -4,13 +4,14 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
-import { JwtAccessGuard } from '../auth/guards/jwt-access-guard';
+import { CurrentUser } from '../auth/decorators/current-user-decorator';
+import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UsersService } from './services/users.service';
 
@@ -19,28 +20,28 @@ import { UsersService } from './services/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(JwtAccessGuard)
   @ApiBearerAuth()
-  @Get('me')
-  public async findMe() {
-    return this.usersService.findMe();
+  @Get('me') // спочатку повинне бути get('me') а потім решта get('userId') !!!!
+  public async findMe(@CurrentUser() userData: IUserData) {
+    return await this.usersService.findMe(userData);
   }
-
-  @Get(':id')
-  public async findOne(@Param('id') id: UserID) {
-    return this.usersService.findOne(id);
-  }
-
-  @Patch(':id')
-  public async update(
-    @Param('id') id: UserID,
+  @ApiBearerAuth()
+  @Patch('me')
+  public async updateMe(
+    @CurrentUser() userData: IUserData,
     @Body() updateUserDto: UpdateUserReqDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return await this.usersService.updateMe(userData, updateUserDto);
   }
 
-  @Delete(':id')
-  public async remove(@Param('id') id: UserID) {
-    return this.usersService.remove(id);
+  @ApiBearerAuth()
+  @Delete('me')
+  public async removeMe(@CurrentUser() userData: IUserData) {
+    return await this.usersService.removeMe(userData);
+  }
+
+  @Get(':userId')
+  public async findOne(@Param('userId', ParseUUIDPipe) userId: UserID) {
+    return await this.usersService.findOne(userId);
   }
 }
