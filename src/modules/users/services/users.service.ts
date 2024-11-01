@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { UserID } from '../../../common/types/entity-ids.type';
 import { Config } from '../../../configs/config-type';
+import { UserEntity } from '../../../database/entities/user.entity';
 import { IUserData } from '../../auth/models/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/services/article.repository';
 import { UserRepository } from '../../repository/services/user.repository';
@@ -27,7 +28,7 @@ export class UsersService {
     return `This action removes a #${userData.email} user`;
   }
 
-  public async findOne(id: UserID) {
-    return `This action returns a #${id} user`;
+  public async findOne(userId: UserID): Promise<UserEntity> {
+    return await this.userRepository.findOneBy({ id: userId });
   }
 }
