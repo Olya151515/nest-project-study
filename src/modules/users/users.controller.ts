@@ -6,11 +6,13 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
 import { CurrentUser } from '../auth/decorators/current-user-decorator';
+import { SkipAuth } from '../auth/decorators/skip-auth-decorator';
 import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UserDtoRes } from './models/dto/res/user.res.dto';
@@ -25,7 +27,8 @@ export class UsersController {
   @ApiBearerAuth()
   @Get('me') // спочатку повинне бути get('me') а потім решта get('userId') !!!!
   public async findMe(@CurrentUser() userData: IUserData) {
-    return await this.usersService.findMe(userData);
+    const result = await this.usersService.findMe(userData);
+    return UserMapper.toResDto(result);
   }
   @ApiBearerAuth()
   @Patch('me')
@@ -33,20 +36,40 @@ export class UsersController {
     @CurrentUser() userData: IUserData,
     @Body() updateUserDto: UpdateUserReqDto,
   ) {
-    return await this.usersService.updateMe(userData, updateUserDto);
+    const result = await this.usersService.updateMe(userData, updateUserDto);
+    return UserMapper.toResDto(result);
   }
 
   @ApiBearerAuth()
   @Delete('me')
-  public async removeMe(@CurrentUser() userData: IUserData) {
-    return await this.usersService.removeMe(userData);
+  public async removeMe(@CurrentUser() userData: IUserData): Promise<void> {
+    await this.usersService.removeMe(userData);
   }
 
+  @SkipAuth()
   @Get(':userId')
   public async findOne(
     @Param('userId', ParseUUIDPipe) userId: UserID,
   ): Promise<UserDtoRes> {
     const result = await this.usersService.findOne(userId);
     return UserMapper.toResDto(result);
+  }
+
+  @ApiBearerAuth()
+  @Post(':userId/follow')
+  public async follow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.follow(userData, userId);
+  }
+
+  @ApiBearerAuth()
+  @Delete(':userId/follow')
+  public async unfollow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.unfollow(userData, userId);
   }
 }

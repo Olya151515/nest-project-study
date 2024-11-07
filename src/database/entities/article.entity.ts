@@ -28,7 +28,7 @@ export class ArticleEntity extends CreateUpdateModel {
   description?: string;
 
   @Column('text', { nullable: true })
-  bod?: string;
+  body?: string;
 
   @OneToMany(() => LikeEntity, (entity) => entity.article)
   likes: LikeEntity[];
