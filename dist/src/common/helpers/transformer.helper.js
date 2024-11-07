@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransformerHelper = void 0;
 class TransformerHelper {
-    static setLowerCase({ value }) {
+    static toLowerCase({ value }) {
         return value ? value.toString().toLowerCase() : value;
     }
     static trim({ value }) {

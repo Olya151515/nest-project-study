@@ -17,7 +17,7 @@ const table_name_enum_1 = require("./enums/table-name.enum");
 const create_update_model_1 = require("./models/create-update.model");
 let TagEntity = class TagEntity extends create_update_model_1.CreateUpdateModel {
     static _OPENAPI_METADATA_FACTORY() {
-        return { id: { required: true, type: () => Object }, name: { required: true, type: () => String }, articles: { required: true, type: () => [require("./article.entity").ArticleEntity] } };
+        return { id: { required: true, type: () => Object }, name: { required: true, type: () => String }, articles: { required: true, type: () => [require("./article.entity").ArticleEntity] }, articleCount: { required: false, type: () => Number } };
     }
 };
 exports.TagEntity = TagEntity;
@@ -34,6 +34,10 @@ __decorate([
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], TagEntity.prototype, "articles", void 0);
+__decorate([
+    (0, typeorm_1.VirtualColumn)({ query: () => 'NULL' }),
+    __metadata("design:type", Number)
+], TagEntity.prototype, "articleCount", void 0);
 exports.TagEntity = TagEntity = __decorate([
     (0, typeorm_1.Entity)(table_name_enum_1.TableNameEnum.TAGS)
 ], TagEntity);

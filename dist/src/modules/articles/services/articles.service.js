@@ -23,6 +23,9 @@ let ArticlesService = class ArticlesService {
         const tags = await this.createTags(dto.tags);
         return await this.articleRepository.save(this.articleRepository.create({ ...dto, tags, user_id: userData.userId }));
     }
+    async findAll(userData, query) {
+        return await this.articleRepository.findAll(userData, query);
+    }
     async findOne(articleId) {
         return {};
     }

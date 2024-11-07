@@ -18,6 +18,21 @@ let ArticleRepository = class ArticleRepository extends typeorm_1.Repository {
         super(article_entity_1.ArticleEntity, dataSource.manager);
         this.dataSource = dataSource;
     }
+    async findAll(userData, query) {
+        const qb = this.createQueryBuilder('article');
+        qb.leftJoinAndSelect('article.tags', 'tag');
+        qb.leftJoinAndSelect('article.user', 'user');
+        if (query.search) {
+            qb.andWhere('CONCAT(article.title, article.description) ILIKE :search');
+            qb.setParameter('search', `%${query.search}%`);
+        }
+        if (query.tag) {
+            qb.andWhere('tag.name = :tag', { tag: query.tag });
+        }
+        qb.take(query.limit);
+        qb.skip(query.offset);
+        return await qb.getManyAndCount();
+    }
 };
 exports.ArticleRepository = ArticleRepository;
 exports.ArticleRepository = ArticleRepository = __decorate([

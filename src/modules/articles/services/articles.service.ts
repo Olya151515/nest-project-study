@@ -8,6 +8,7 @@ import { IUserData } from '../../auth/models/interfaces/user-data.interface';
 import { ArticleRepository } from '../../repository/services/article.repository';
 import { TagRepository } from '../../repository/services/tag.repository';
 import { BaseArticleReqDto } from '../models/dto/req/base-article.req.dto';
+import { ListArticleQueryDto } from '../models/dto/req/list-article.query.dto';
 import { UpdateArticleDto } from '../models/dto/req/update-article.req.dto';
 
 @Injectable()
@@ -26,6 +27,12 @@ export class ArticlesService {
     );
   }
 
+  public async findAll(
+    userData: IUserData,
+    query: ListArticleQueryDto,
+  ): Promise<[ArticleEntity[], number]> {
+    return await this.articleRepository.findAll(userData, query);
+  }
   public async findOne(articleId: ArticleID): Promise<ArticleEntity> {
     return {} as ArticleEntity;
   }

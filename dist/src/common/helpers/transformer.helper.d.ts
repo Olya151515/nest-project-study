@@ -1,5 +1,5 @@
 export declare class TransformerHelper {
-    static setLowerCase({ value }: {
+    static toLowerCase({ value }: {
         value: string;
     }): string;
     static trim({ value }: {

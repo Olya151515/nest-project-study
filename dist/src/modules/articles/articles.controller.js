@@ -18,23 +18,28 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const current_user_decorator_1 = require("../auth/decorators/current-user-decorator");
 const base_article_req_dto_1 = require("./models/dto/req/base-article.req.dto");
+const list_article_query_dto_1 = require("./models/dto/req/list-article.query.dto");
 const update_article_req_dto_1 = require("./models/dto/req/update-article.req.dto");
 const article_mapper_1 = require("./services/article.mapper");
 const articles_service_1 = require("./services/articles.service");
 let ArticlesController = class ArticlesController {
-    constructor(articlesService) {
-        this.articlesService = articlesService;
+    constructor(articleService) {
+        this.articleService = articleService;
     }
     async create(userData, createArticleDto) {
-        const result = await this.articlesService.create(userData, createArticleDto);
+        const result = await this.articleService.create(userData, createArticleDto);
         return article_mapper_1.ArticlesMapper.toResDto(result);
     }
+    async findAll(userData, query) {
+        const [entities, total] = await this.articleService.findAll(userData, query);
+        return article_mapper_1.ArticlesMapper.toResDtoList(entities, total, query);
+    }
     async findOne(articleId) {
-        const result = await this.articlesService.findOne(articleId);
+        const result = await this.articleService.findOne(articleId);
         return article_mapper_1.ArticlesMapper.toResDto(result);
     }
     async update(userData, articleId, updateArticleDto) {
-        const result = await this.articlesService.update(userData, articleId, updateArticleDto);
+        const result = await this.articleService.update(userData, articleId, updateArticleDto);
         return article_mapper_1.ArticlesMapper.toResDto(result);
     }
 };
@@ -48,6 +53,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, base_article_req_dto_1.BaseArticleReqDto]),
     __metadata("design:returntype", Promise)
 ], ArticlesController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    openapi.ApiResponse({ status: 200, type: require("./models/dto/res/article-list.res.dto").ArticleListResDto }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, list_article_query_dto_1.ListArticleQueryDto]),
+    __metadata("design:returntype", Promise)
+], ArticlesController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':articleId'),
     openapi.ApiResponse({ status: 200, type: require("./models/dto/res/base-article.res.dto").ArticleResDto }),

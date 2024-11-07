@@ -19,6 +19,7 @@ const logger_module_1 = require("./modules/logger/logger.module");
 const postgres_module_1 = require("./modules/postgres/postgres.module");
 const redis_module_1 = require("./modules/redis/redis.module");
 const repository_module_1 = require("./modules/repository/repository.module");
+const tag_module_1 = require("./modules/tags/tag.module");
 const users_module_1 = require("./modules/users/users.module");
 let AppModule = class AppModule {
 };
@@ -38,6 +39,7 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             articles_module_1.ArticlesModule,
             comments_module_1.CommentsModule,
+            tag_module_1.TagModule,
         ],
         providers: [
             {

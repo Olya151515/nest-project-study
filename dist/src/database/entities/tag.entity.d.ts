@@ -5,4 +5,5 @@ export declare class TagEntity extends CreateUpdateModel {
     id: TagID;
     name: string;
     articles: ArticleEntity[];
+    articleCount?: number;
 }

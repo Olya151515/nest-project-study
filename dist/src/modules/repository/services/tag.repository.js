@@ -18,6 +18,15 @@ let TagRepository = class TagRepository extends typeorm_1.Repository {
         super(tag_entity_1.TagEntity, dataSource.manager);
         this.dataSource = dataSource;
     }
+    async getPopular() {
+        const qb = await this.createQueryBuilder('tag');
+        qb.leftJoin('tag.articles', 'article');
+        qb.addSelect('COUNT(article.id)', 'tag_articleCount');
+        qb.groupBy('tag.id');
+        qb.orderBy('"tag_articleCount"', 'DESC');
+        qb.limit(10);
+        return await qb.getMany();
+    }
 };
 exports.TagRepository = TagRepository;
 exports.TagRepository = TagRepository = __decorate([
